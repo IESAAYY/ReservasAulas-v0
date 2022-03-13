@@ -237,7 +237,7 @@ public class Vista {
 			
 			for (int i = 0; i < profesores.length; i++) {
 				String datosProfesores = profesores[i].toString();		
-				if (nombreProfesor.equals(datosProfesores.substring(datosProfesores.indexOf('=') + 1, datosProfesores.indexOf(',')))) {
+				if (datosProfesores.contains(nombreProfesor)) {
 					profesorRegistrado = true;
 					correo = datosProfesores.substring(datosProfesores.indexOf('=') + 1, datosProfesores.lastIndexOf(','));
 					correoFinal = correo.replace(nombreProfesor + ", correo=", "");
@@ -250,9 +250,6 @@ public class Vista {
 				}
 			}
 
-			if (!aulaRegistrada || !profesorRegistrado) {
-				System.out.println(ERROR + INSERTAR_PRIMERO);
-			} else {
 				if (!aulaRegistrada) {
 					System.out.println(ERROR + "No est� registrada el aula " + nombreAula + " en el sistema.");
 				} else {
@@ -264,14 +261,13 @@ public class Vista {
 					Profesor profesorALeer = new Profesor(nombreProfesor, correoFinal);
 					reserva = new Reserva(profesorALeer, aula, permanencia);
 				}
-			}
+			
 
 		} catch (IllegalArgumentException | NullPointerException e) {
 			System.out.println(e.getMessage());
 		}
 
 		return reserva;
-
 	}
 	
 	public void anularReserva() {
@@ -281,9 +277,12 @@ public class Vista {
 		try {
 			Profesor profesor = null;
 			controlador.anularReserva(leerReserva(profesor));
+			System.out.println("");
 			System.out.println("Reserva anulada correctamente, " + NOMBRE_VALIDO + CORREO_VALIDO + ".");
 		} catch (OperationNotSupportedException | IllegalArgumentException | NullPointerException e) {
+			System.out.println("");
 			System.out.println(e.getMessage());
+			System.out.println(e.getClass());
 		}
 	}
 	
@@ -357,6 +356,7 @@ public class Vista {
 		Consola.mostrarCabecera(Opcion.LISTAR_RESERVAS_PERMANECIA.getMensaje());
 		Permanencia permanencia = new Permanencia(Consola.leerDia(), Consola.leerTramo());
 		Reserva[] reservas = controlador.getReservasPermanencia(permanencia);
+		System.out.println("");
 		if (reservas[0] != null) {
 			for (Reserva reserva : reservas) {
 				if (reserva != null)
